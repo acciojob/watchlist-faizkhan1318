@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
@@ -48,6 +51,30 @@ public class MovieController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/get-movies-by-director-name/{director}")
+    public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable String name){
+        List<String> movies = movieService.movieListByDirector(name);
+        return new ResponseEntity<>(movies, HttpStatus.CREATED);
+    }
+    @GetMapping("/get-all-movies")
+    public ResponseEntity<List<String>> findAllMovies(){
+        List<String> movies = movieService.allMovies();
+        return new ResponseEntity<>(movies, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete-director-by-name")
+    public ResponseEntity<String> deleteDirectorByName(@RequestParam String name){
+        movieService.deleteDirectorByName(name);
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete-all-directors")
+    public ResponseEntity<String> deleteAllDirectors(){
+        movieService.deleteAllDirectors();
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED);
+    }
+
+
 
 
 }

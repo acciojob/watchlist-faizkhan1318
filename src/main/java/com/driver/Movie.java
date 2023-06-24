@@ -29,6 +29,7 @@ public class Movie {
         this.durationInMinutes = durationInMinutes;
     }
 
+
     public String getName() {
         return name;
     }

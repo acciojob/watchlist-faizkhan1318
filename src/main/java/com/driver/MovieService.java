@@ -2,6 +2,7 @@ package com.driver;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,31 @@ public class MovieService {
             return directorOpt.get();
         }
         throw new RuntimeException(directorName);
+    }
+
+    public List<String> movieListByDirector(String name) {
+        List<String> movies = movieRepository.movieListByDirector(name);
+        return movies;
+    }
+
+    public List<String> allMovies() {
+        List<String> movies = movieRepository.allMovies();
+        return movies;
+    }
+
+    public void deleteDirectorByName(String name) {
+        List<String> moviesList = movieRepository.movieListByDirector(name);
+        movieRepository.delete(name);
+        for(String movies : moviesList){
+            movieRepository.removeMovies(movies);
+        }
+    }
+
+    public void deleteAllDirectors() {
+        List<String> director = movieRepository.getAllDirectors();
+        for(String dir : director){
+            movieRepository.delete(dir);
+        }
+
     }
 }

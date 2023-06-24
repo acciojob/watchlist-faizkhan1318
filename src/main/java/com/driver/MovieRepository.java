@@ -9,7 +9,7 @@ public class MovieRepository {
     Map<String, Movie> movieMap = new HashMap<>();
     Map<String, Director> directorMap = new HashMap<>();
     Map<String, List<String>> directorMovieMap = new HashMap<>();
-    Map<String, String> movieDirectorMap = new HashMap<>();
+//    Map<String, String> movieDirectorMap = new HashMap<>();
     public void addMovie(Movie movie) {
         movieMap.put(movie.getName(), movie);
     }
@@ -31,9 +31,30 @@ public class MovieRepository {
         return Optional.empty();
     }
     public void addMovieDirectorPair(String movieName, String directorName) {
-        List<String> movieList = directorMovieMap.getOrDefault(directorName, new ArrayList<>());
+        List<java.lang.String> movieList = directorMovieMap.getOrDefault(directorName, new ArrayList<>());
         movieList.add(movieName);
         directorMovieMap.put(directorName, movieList);
-        movieDirectorMap.put(movieName, directorName);
+        //movieDirectorMap.put(movieName, directorName);
+    }
+
+    public List<String> movieListByDirector(String name) {
+        return directorMovieMap.get(name);
+    }
+
+    public List<String> allMovies() {
+        return new ArrayList<>(movieMap.keySet());
+    }
+
+    public void delete(String name) {
+        directorMap.remove(name);
+        directorMovieMap.remove(name);
+    }
+
+    public void removeMovies(String movies) {
+        movieMap.remove(movies);
+    }
+
+    public List<String> getAllDirectors() {
+        return new ArrayList<>(directorMap.keySet());
     }
 }
