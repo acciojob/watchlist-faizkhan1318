@@ -11,11 +11,11 @@ public class MovieRepository {
     Map<String, List<String>> directorMovieMap = new HashMap<>();
     Map<String, String> movieDirectorMap = new HashMap<>();
     public void addMovie(Movie movie) {
-        movieMap.put(movie.getMovieName(), movie);
+        movieMap.put(movie.getName(), movie);
     }
 
     public void addDirector(Director director) {
-        directorMap.put(director.getDirectorName(), director);
+        directorMap.put(director.getName(), director);
     }
 
     public Optional<Movie> getByMovieName(String movieName) {
