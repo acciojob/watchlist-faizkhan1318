@@ -7,68 +7,65 @@ import java.util.Optional;
 
 @Service
 public class MovieService {
-    MovieRepository movieRepository = new MovieRepository();
+    private MovieRepository movieRepository=new MovieRepository();
     public void addMovie(Movie movie) {
-        movieRepository.addMovie(movie);
-    }
-    public void addDirector(Director director) {
-        movieRepository.addDirector(director);
-    }
-    public void addMovieDirectorPair(String movieName, String directorName) throws RuntimeException {
-        Optional<Movie> movieOpt = movieRepository.getByMovieName(movieName);
-        Optional<Director> directorOpt = movieRepository.getByDirectorNAme(directorName);
-
-        if(movieOpt.isEmpty()){
-            throw new RuntimeException("Movie Not Found");
-        }
-        if(directorOpt.isEmpty()){
-            throw new RuntimeException("Director Not Found");
-        }
-        Director director = directorOpt.get();
-        director.setNumberOfMovies(director.getNumberOfMovies()+1);
-        movieRepository.addDirector(director);
-        movieRepository.addMovieDirectorPair(movieName, directorName);
+        movieRepository.addNewMovie(movie);
 
     }
-    public Movie getMovieByName(String name) throws RuntimeException {
-        Optional<Movie> movieOpt=movieRepository.getByMovieName(name);
+    public void addDirectory(Director director) {
+        movieRepository.addNewDirectory(director);
+    }
+
+    public void addMovieDirectorPair(String movie, String director) {
+        Optional<Movie> movieOpt = movieRepository.getMovie(movie);
+        Optional<Director> directorOpt = movieRepository.getDirector(director);
+        if (movieOpt.isEmpty()){
+            throw new RuntimeException("Movie Not Found Exception");
+        } if(directorOpt.isEmpty()) {
+            throw new RuntimeException("Director not found Exception");
+        }
+        Director directorObj=directorOpt.get();
+        directorObj.setNumberOfMovies(directorObj.getNumberOfMovies()+1);
+        movieRepository.addNewDirectory(directorObj);
+        movieRepository.addMovieDirectorPair(movie, director);
+    }
+
+    public Movie getMovieByName(String name) throws Exception {
+        Optional<Movie> movieOpt=movieRepository.getMovie(name);
         if(movieOpt.isPresent()){
             return movieOpt.get();
         }
-       throw new RuntimeException(name);
+        throw new Exception(name);
     }
 
-    public Director getDirectorByName(String directorName) throws RuntimeException {
-        Optional<Director> directorOpt=movieRepository.getByDirectorNAme(directorName);
+    public Director getDirectorByName(String name) {
+        Optional<Director> directorOpt=movieRepository.getDirector(name);
         if(directorOpt.isPresent()){
             return directorOpt.get();
         }
-        throw new RuntimeException(directorName);
+        throw new RuntimeException(name);
     }
 
-    public List<String> movieListByDirector(String name) {
-        List<String> movies = movieRepository.movieListByDirector(name);
-        return movies;
+    public List<String> getMoviesByDirectorName(String director) {
+        return movieRepository.getMoviesByDirectorName(director);
     }
 
-    public List<String> allMovies() {
-        List<String> movies = movieRepository.allMovies();
-        return movies;
+    public List<String> getAllmovies() {
+        return movieRepository.getAllMovies();
     }
 
-    public void deleteDirectorByName(String name) {
-        List<String> moviesList = movieRepository.movieListByDirector(name);
-        movieRepository.delete(name);
-        for(String movies : moviesList){
-            movieRepository.removeMovies(movies);
+    public void deleteDirector(String director) {
+        List<String> movies= getMoviesByDirectorName(director);
+        movieRepository.deleteDirector(director);
+        for(String mov:movies){
+            movieRepository.deleteMovies(mov);
         }
     }
 
-    public void deleteAllDirectors() {
-        List<String> director = movieRepository.getAllDirectors();
-        for(String dir : director){
-            movieRepository.delete(dir);
+    public void deleteAllDirector() {
+        List<String> directors=movieRepository.getAllDirector();
+        for (String dir:directors){
+            deleteDirector(dir);
         }
-
     }
 }
